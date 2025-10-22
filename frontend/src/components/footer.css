@@ -1,0 +1,68 @@
+/* footer.css
+   Estilos responsivos para o Footer e regras para evitar sobreposição com o conteúdo.
+   - Mantém o footer ao fim da página (não fixo).
+   - Garante espaço inferior no .content para que nada fique oculto.
+   - Em desktop (lg+) alinha o footer com o conteúdo quando a Siderbar está presente
+     (usa classes adicionadas pelo componente Siderbar: body.has-siderbar / siderbar-collapsed).
+*/
+
+:root {
+  --app-footer-height: 56px;
+}
+
+/* Footer visual */
+.app-footer {
+  min-height: var(--app-footer-height);
+  display: flex;
+  align-items: center;
+  z-index: 1020;
+}
+
+/* Layout interno responsivo:
+   - column em xs, row em md+
+*/
+.app-footer .container > .d-flex {
+  gap: 0.5rem;
+}
+
+/* Espaço inferior para o conteúdo principal:
+   - adicione className="content" ao container principal (<main className="content">)
+   - isto evita que o footer cubra o conteúdo em páginas curtas
+*/
+.content {
+  padding-bottom: var(--app-footer-height);
+}
+
+/* Quando a aplicação usa a Siderbar fixa no desktop, deslocar o footer para alinhar ao conteúdo.
+   Nota: o Siderbar adiciona body.has-siderbar e body.siderbar-collapsed
+*/
+@media (min-width: 992px) {
+  body.has-siderbar .app-footer {
+    margin-left: 220px; /* deve bater com SIDEBAR_WIDTH */
+    width: calc(100% - 220px);
+    transition: margin-left 200ms ease, width 200ms ease;
+  }
+
+  body.has-siderbar.siderbar-collapsed .app-footer {
+    margin-left: 72px; /* COLLAPSED_WIDTH */
+    width: calc(100% - 72px);
+  }
+}
+
+/* Em telas menores o footer ocupa 100% sem deslocamento */
+@media (max-width: 991.98px) {
+  .app-footer {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  /* esconder texto em botões se houver (consistência com header) */
+  .app-footer .d-none-d-sm {
+    display: none;
+  }
+}
+
+/* Pequenos ajustes visuais */
+.app-footer a {
+  text-decoration: underline;
+}

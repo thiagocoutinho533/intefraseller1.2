@@ -1,0 +1,70 @@
+:root {
+  --header-height: 64px;
+  --header-max-width: 1100px; /* deve bater com o max-width do .content .container */
+}
+
+/* Header base */
+.app-header {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height);
+  z-index: 1045;
+  transition: left 200ms ease, right 200ms ease;
+  display: flex;
+  align-items: center;
+}
+
+/* header-inner limita a largura e centraliza o conteúdo do header,
+   assim fica alinhado com o container do conteúdo principal */
+.header-inner {
+  width: 100%;
+  max-width: var(--header-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;  /* mesmo padding usado no container */
+  padding-right: 1.25rem;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* Título (agora à ESQUERDA dentro da área centralizada) */
+.admin-title {
+  font-size: 1.125rem;
+  margin: 0;
+  color: #fff;
+}
+
+/* botões verticalmente centrados e com padding menor para não "subirem" */
+.header-actions .btn {
+  min-height: 36px;
+  padding-top: 0.35rem;
+  padding-bottom: 0.35rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+/* esconder texto dos botões em xs (só ícone) */
+@media (max-width: 575.98px) {
+  .header-actions .d-none-d-sm {
+    display: none;
+  }
+}
+
+/* quando siderbar está ativa no desktop, deslocamos o header para a direita.
+   Isso cria a "área restante" onde .header-inner fica centralizado — assim
+   a borda esquerda de .header-inner coincide com a borda esquerda do container
+   principal (o que você quer). */
+@media (min-width: 992px) {
+  body.has-siderbar .app-header {
+    left: 220px; /* SIDEBAR_WIDTH */
+    right: 0;
+  }
+
+  body.has-siderbar.siderbar-collapsed .app-header {
+    left: 72px; /* COLLAPSED_WIDTH */
+    right: 0;
+  }
+}

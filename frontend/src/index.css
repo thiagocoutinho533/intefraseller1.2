@@ -1,0 +1,57 @@
+:root{
+  --sidebar-width: 220px;
+  --sidebar-collapsed-width: 72px;
+  --header-height: 64px;
+  --footer-height: 56px;
+}
+
+/* Área principal (conteúdo) — evita que fique sob o header e footer */
+.content {
+  padding-top: var(--header-height);
+  padding-bottom: var(--footer-height);
+  transition: margin-left 200ms ease;
+  min-height: calc(100vh - var(--header-height) - var(--footer-height));
+  box-sizing: border-box;
+  /* por padrão o conteúdo interno (container) fica centralizado */
+}
+
+/* Centraliza o container dentro da área disponível (desktop) */
+.content .container,
+.content .container-fluid {
+  max-width: 1100px; /* ajuste conforme preferência */
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+/* Desktop: quando a siderbar estiver ativa, deslocar o conteúdo para a direita.
+   Em vez de "colar" o container ao início da área, deslocamos todo o bloco (.content)
+   mantendo o container centralizado dentro da área remanescente. */
+@media (min-width: 992px) {
+  body.has-siderbar .content {
+    margin-left: var(--sidebar-width);
+  }
+
+  body.has-siderbar.siderbar-collapsed .content {
+    margin-left: var(--sidebar-collapsed-width);
+  }
+
+  /* Opcional: reduzir o max-width se quiser mais "respiro" quando a sidebar estiver presente */
+  body.has-siderbar .content .container,
+  body.has-siderbar .content .container-fluid {
+    max-width: 1100px;
+  }
+}
+
+/* Mobile: não deslocar (offcanvas) */
+@media (max-width: 991.98px) {
+  body.has-siderbar .content {
+    margin-left: 0;
+  }
+}
+
+/* Evita que conteúdos fluidos tenham paddings estranhos */
+.content .container-fluid.px-4 {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}

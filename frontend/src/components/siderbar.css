@@ -1,0 +1,61 @@
+/* siderbar.css
+   estilos para o componente Siderbar (colapsável e responsivo)
+*/
+
+.z-top { z-index: 1050; }
+
+.siderbar {
+  transition: width 200ms ease;
+  overflow: hidden;
+}
+
+.siderbar.collapsed .brand-text,
+.siderbar.collapsed .nav-label {
+  display: none;
+}
+
+.siderbar.collapsed .siderbar-top {
+  justify-content: center;
+}
+
+.collapse-btn .rotated {
+  transform: rotate(180deg);
+  transition: transform 150ms linear;
+}
+
+.siderbar .nav-link {
+  white-space: nowrap;
+}
+
+.offcanvas {
+  width: 260px;
+}
+.offcanvas .siderbar-top {
+  height: 64px;
+}
+
+/* Ajuste no layout principal:
+   Adicione className="content" ao elemento main/container do seu layout.
+   Em telas lg+ o conteúdo será deslocado automaticamente.
+*/
+@media (min-width: 992px) {
+  body.has-siderbar .content {
+    margin-left: 220px;
+    transition: margin-left 200ms ease;
+  }
+
+  body.has-siderbar.siderbar-collapsed .content {
+    margin-left: 72px;
+  }
+}
+
+@media (max-width: 991.98px) {
+  body.has-siderbar .content {
+    margin-left: 0;
+  }
+}
+
+.siderbar img {
+  max-width: 100%;
+  height: auto;
+}
