@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../services/auth";
 
 /* ======= Loader do Google Charts (Material Bar) ======= */
 function useGoogleChartsBar() {
@@ -143,6 +145,12 @@ function CardConversao({ visitas, taxa }) {
 
 /* =========================================================== */
 export default function Dashboard() {
+  const navigate = useNavigate();
+  function handleLogout() {
+    logout();
+    navigate("/login", { replace: true });
+  }
+
   const [dados] = useState({
     total_vendas: 12500.5,
     valor_bruto: 320,
@@ -183,11 +191,11 @@ export default function Dashboard() {
     return produtos.filter((p) => p.titulo.toLowerCase().includes(q) || p.id.includes(q));
   }, [query, produtos]);
 
- return (
+  return (
     <div>
-     <main className="flex-grow-1 bg-white min-vh-100 content-dashboard">
+      <main className="flex-grow-1 bg-white min-vh-100 content-dashboard">
         <div className="container-fluid px-4">
-          {/* Título + Filtro alinhado à direita */}
+          {/* Título + Filtro + Botão Sair */}
           <div className="row align-items-end mt-4 mb-3">
             <div className="col">
               <h1 className="h3 mb-0">Dashboard</h1>
@@ -195,69 +203,43 @@ export default function Dashboard() {
                 <li className="breadcrumb-item active">Dashboard</li>
               </ol>
             </div>
-            <div className="col-auto">
+            <div className="col-auto d-flex gap-2">
               <FiltroDate />
+              <button type="button" className="btn btn-outline-danger" onClick={handleLogout}>
+                Sair
+              </button>
             </div>
           </div>
 
-          {/* Métricas rápidas: 1 col xs, 2 cols sm, 4 cols lg */}
+          {/* Métricas rápidas */}
           <div className="row g-3 mb-4">
             <div className="col-12 col-sm-6 col-lg-3">
               <CardMetric title="Total Vendas" value={dados?.total_vendas} />
             </div>
-
             <div className="col-12 col-sm-6 col-lg-3">
-              <CardMoney
-                title="Total Bruto"
-                value={dados?.valor_bruto}
-                classNameValue="text-primary"
-              />
+              <CardMoney title="Total Bruto" value={dados?.valor_bruto} classNameValue="text-primary" />
             </div>
-
             <div className="col-12 col-sm-6 col-lg-3">
-              <CardMoney
-                title="Taxas"
-                value={dados?.taxas}
-                classNameValue="text-primary"
-              />
+              <CardMoney title="Taxas" value={dados?.taxas} classNameValue="text-primary" />
             </div>
-
             <div className="col-12 col-sm-6 col-lg-3">
-              <CardMoney
-                title="Valor Líquido"
-                value={dados?.valor_liquido}
-                classNameValue="text-info"
-              />
+              <CardMoney title="Valor Líquido" value={dados?.valor_liquido} classNameValue="text-info" />
             </div>
-
             <div className="col-12 col-sm-6 col-lg-3">
-              <CardMoney
-                title="Ticket Médio"
-                value={dados?.ticket_medio}
-                classNameValue="text-primary"
-              />
+              <CardMoney title="Ticket Médio" value={dados?.ticket_medio} classNameValue="text-primary" />
             </div>
-
             <div className="col-12 col-sm-6 col-lg-3">
-              <CardMetric
-                title="Unidades Vendidas"
-                value={dados?.unidades_vendidas}
-              />
+              <CardMetric title="Unidades Vendidas" value={dados?.unidades_vendidas} />
             </div>
-
             <div className="col-12 col-sm-6 col-lg-3">
               <CardMetric title="Total Visitas" value={dados?.total_visitas} />
             </div>
-
             <div className="col-12 col-sm-6 col-lg-3">
-              <CardConversao
-                visitas={dados?.total_visitas}
-                taxa={dados?.taxa_conversao}
-              />
+              <CardConversao visitas={dados?.total_visitas} taxa={dados?.taxa_conversao} />
             </div>
           </div>
 
-          {/* Gráficos: empilham em telas pequenas, 2 colunas em lg */}
+          {/* Gráficos */}
           <div className="row">
             <div className="col-12 col-lg-6">
               <div className="card mb-4 h-100">
@@ -266,11 +248,7 @@ export default function Dashboard() {
                   Area Chart Example
                 </div>
                 <div className="card-body">
-                  <GoogleMaterialBar
-                    dataArray={chartData}
-                    options={chartOptions}
-                    height={260}
-                  />
+                  <GoogleMaterialBar dataArray={chartData} options={chartOptions} height={260} />
                 </div>
               </div>
             </div>
@@ -282,11 +260,7 @@ export default function Dashboard() {
                   Bar Chart Example
                 </div>
                 <div className="card-body">
-                  <GoogleMaterialBar
-                    dataArray={chartData}
-                    options={chartOptions}
-                    height={260}
-                  />
+                  <GoogleMaterialBar dataArray={chartData} options={chartOptions} height={260} />
                 </div>
               </div>
             </div>
@@ -300,7 +274,7 @@ export default function Dashboard() {
             </div>
 
             <div className="card-body">
-              {/* Busca + contador anúncios (stack em xs, inline em md+) */}
+              {/* Busca + contador */}
               <div className="d-flex flex-column flex-md-row align-items-stretch align-items-md-center justify-content-between gap-3 mb-3">
                 <div className="flex-grow-1">
                   <div className="input-group">
@@ -421,5 +395,3 @@ export default function Dashboard() {
     </div>
   );
 }
-
-export { Dashboard };
