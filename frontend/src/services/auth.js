@@ -1,15 +1,31 @@
 import api from "./api";
 
+const TOKEN_KEY = "token";
+
+export function getToken() {
+  const t = localStorage.getItem(TOKEN_KEY);
+  if (!t || t === "undefined" || t === "null") return null;
+  return t;
+}
+
+export function isAuthenticated() {
+  return !!getToken();
+}
+
+export function logout() {
+  localStorage.removeItem(TOKEN_KEY);
+}
+
 export async function login(email, password) {
+  // espere que sua API /auth/login retorne { token, user }
   const { data } = await api.post("/auth/login", { email, password });
-  // espera { token, user }
-  localStorage.setItem("token", data.token);
+  if (data?.token) localStorage.setItem(TOKEN_KEY, data.token);
   return data;
 }
 
 export async function registerUser(name, email, password) {
   const { data } = await api.post("/auth/register", { name, email, password });
-  return data; // pode já logar após cadastro no submit
+  return data;
 }
 
 export async function requestPasswordReset(email) {
@@ -20,12 +36,4 @@ export async function requestPasswordReset(email) {
 export async function resetPassword(token, password) {
   const { data } = await api.post("/auth/reset-password", { token, password });
   return data;
-}
-
-export function logout() {
-  localStorage.removeItem("token");
-}
-
-export function isAuthenticated() {
-  return !!localStorage.getItem("token");
 }
