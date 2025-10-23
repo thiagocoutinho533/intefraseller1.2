@@ -1,5 +1,19 @@
-
+version: "3.8"
 services:
+  app:
+    build: .
+    image: integraseller-backend:latest
+    restart: always
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - PORT=4000
+      - JWT_SECRET=${JWT_SECRET}
+      - CLIENT_URL=${CLIENT_URL}
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+
   db:
     image: postgres:15
     restart: always
@@ -9,8 +23,6 @@ services:
       POSTGRES_DB: integraseller
     volumes:
       - db-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
 
 volumes:
   db-data:

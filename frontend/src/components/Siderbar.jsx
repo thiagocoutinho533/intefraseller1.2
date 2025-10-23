@@ -8,7 +8,7 @@ import {
   Gear,
   ChevronLeft
 } from "react-bootstrap-icons";
-import "./Siderbar.css";
+
 
 
 const SIDEBAR_WIDTH = 220;
