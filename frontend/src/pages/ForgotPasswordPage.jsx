@@ -35,5 +35,5 @@ export default function ForgotPasswordPage() {
       <style>{`.input{width:100%;margin:6px 0 12px;padding:10px;border:1px solid #ddd;border-radius:8px}
       button{width:100%;padding:10px;border:0;background:#6c757d;color:#fff;border-radius:8px;cursor:pointer}`}</style>
     </div>
-  );
-}
+    );
+    }
