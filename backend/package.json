@@ -1,24 +1,25 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
- "scripts": { "dev": "nodemon server.js", "start": "node server.js" },
- 
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@prisma/client": "^6.18.0",
-    "bcrypt": "^6.0.0",
+  "name": "integraseller-backend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "build": "echo \"no build step\"",
+    "prisma:generate": "prisma generate",
+    "prisma:dev": "prisma migrate dev --name init",
+    "prisma:deploy": "prisma migrate deploy"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.18.0",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
-    "express": "^5.1.0",
-    "i": "^0.3.7",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
-    "nodemon": "^3.1.10",
-    "npm": "^11.6.2",
-    "pg": "^8.16.3",
-    "prisma": "^6.18.0"
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "prisma": "^5.18.0"
   }
 }
