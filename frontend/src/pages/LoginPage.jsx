@@ -3,42 +3,78 @@ import { useNavigate, Link } from "react-router-dom";
 import { login } from "../services/auth";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState("");
   const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [erro, setErro] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setLoading(true); setErr("");
+    setErro("");
+
     try {
-      await login(email.trim(), password);
+      await login(email, senha); // chama API e já salva no localStorage
       navigate("/dashboard", { replace: true });
-    } catch (e) {
-      setErr(e?.response?.data?.message || "Falha no login");
-    } finally {
-      setLoading(false);
+    } catch (err) {
+      setErro(err.message || "Erro ao entrar");
     }
   }
 
   return (
-    <div style={{maxWidth:420, margin:"60px auto", padding:24}}>
-      <h2>Entrar</h2>
+    <div style={{ maxWidth: 600, margin: "4rem auto" }}>
+      <h1>Entrar</h1>
+
       <form onSubmit={handleSubmit}>
-        <label>E-mail</label>
-        <input type="email" value={email} onChange={e=>setEmail(e.target.value)} required className="input" />
-        <label>Senha</label>
-        <input type="password" value={password} onChange={e=>setPassword(e.target.value)} required className="input" />
-        {err && <p style={{color:"crimson"}}>{err}</p>}
-        <button disabled={loading} type="submit">{loading?"Entrando...":"Entrar"}</button>
+        <label>
+          E-mail
+          <input
+            type="email"
+            className="form-control"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </label>
+
+        <label style={{ marginTop: "1rem", display: "block" }}>
+          Senha
+          <input
+            type="password"
+            className="form-control"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+            required
+          />
+        </label>
+
+        {erro && (
+          <div style={{ color: "red", marginTop: "0.5rem" }}>{erro}</div>
+        )}
+
+        <button
+          type="submit"
+          style={{
+            marginTop: "1rem",
+            backgroundColor: "#0d6efd",
+            color: "#fff",
+            border: "none",
+            borderRadius: "6px",
+            padding: "0.75rem 1rem",
+            width: "100%",
+            fontSize: "1rem",
+          }}
+        >
+          Entrar
+        </button>
       </form>
-      <div style={{marginTop:12, display:"flex", gap:12}}>
-        <Link to="/register">Criar conta</Link>
+
+      <div style={{ marginTop: "1rem", fontSize: "0.9rem" }}>
+        <Link to="/register" style={{ marginRight: "1rem" }}>
+          Criar conta
+        </Link>
         <Link to="/forgot-password">Esqueci minha senha</Link>
       </div>
-      <style>{`.input{width:100%;margin:6px 0 12px;padding:10px;border:1px solid #ddd;border-radius:8px}
-      button{width:100%;padding:10px;border:0;background:#0d6efd;color:#fff;border-radius:8px;cursor:pointer}`}</style>
     </div>
   );
 }

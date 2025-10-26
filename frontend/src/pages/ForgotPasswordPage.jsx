@@ -5,35 +5,106 @@ import { requestPasswordReset } from "../services/auth";
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [msg, setMsg] = useState("");
-  const [err, setErr] = useState("");
+  const [erro, setErro] = useState("");
   const [loading, setLoading] = useState(false);
+  const [tokenGerado, setTokenGerado] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setMsg(""); setErr(""); setLoading(true);
+    setErro("");
+    setMsg("");
+    setTokenGerado("");
+
+    if (!email.trim()) {
+      setErro("Informe seu e-mail");
+      return;
+    }
+
     try {
-      const r = await requestPasswordReset(email.trim());
-      setMsg(r?.message || "Se o e-mail existir, enviamos instruções de reset.");
-    } catch (e) {
-      setErr(e?.response?.data?.message || "Não foi possível enviar o e-mail.");
+      setLoading(true);
+      const resp = await requestPasswordReset(email);
+      // resp esperado: { message: "...", token: "..." }
+      setMsg(resp.message || "Se existir conta, enviamos instruções.");
+      if (resp.token) {
+        setTokenGerado(resp.token);
+      }
+    } catch (err) {
+      setErro(err.message || "Erro ao solicitar redefinição");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div style={{maxWidth:420, margin:"60px auto", padding:24}}>
-      <h2>Recuperar senha</h2>
+    <div style={{ maxWidth: 480, margin: "4rem auto" }}>
+      <h1>Esqueci minha senha</h1>
+      <p style={{ color: "#555", fontSize: "0.95rem" }}>
+        Digite seu e-mail e nós vamos gerar um link/token de recuperação.
+      </p>
+
       <form onSubmit={handleSubmit}>
-        <label>E-mail</label>
-        <input type="email" className="input" value={email} onChange={e=>setEmail(e.target.value)} required />
-        {msg && <p style={{color:"green"}}>{msg}</p>}
-        {err && <p style={{color:"crimson"}}>{err}</p>}
-        <button disabled={loading} type="submit">{loading?"Enviando...":"Enviar instruções"}</button>
+        <label style={{ display: "block", marginBottom: "1rem" }}>
+          E-mail
+          <input
+            type="email"
+            className="form-control"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </label>
+
+        {erro && (
+          <div style={{ color: "red", marginBottom: "1rem" }}>
+            {erro}
+          </div>
+        )}
+
+        {msg && (
+          <div style={{ color: "green", marginBottom: "1rem" }}>
+            {msg}
+          </div>
+        )}
+
+        {tokenGerado && (
+          <div
+            style={{
+              background: "#f8f9fa",
+              border: "1px solid #ccc",
+              borderRadius: "4px",
+              fontSize: "0.8rem",
+              padding: "0.5rem",
+              wordBreak: "break-all",
+              marginBottom: "1rem",
+            }}
+          >
+            Token de teste (copie isso para resetar senha): <br />
+            <strong>{tokenGerado}</strong>
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={loading}
+          style={{
+            backgroundColor: "#0d6efd",
+            color: "#fff",
+            border: "none",
+            borderRadius: "6px",
+            padding: "0.75rem 1rem",
+            width: "100%",
+            fontSize: "1rem",
+            cursor: "pointer",
+            opacity: loading ? 0.6 : 1,
+          }}
+        >
+          {loading ? "Enviando..." : "Enviar instruções"}
+        </button>
       </form>
-      <div style={{marginTop:12}}><Link to="/login">Voltar ao login</Link></div>
-      <style>{`.input{width:100%;margin:6px 0 12px;padding:10px;border:1px solid #ddd;border-radius:8px}
-      button{width:100%;padding:10px;border:0;background:#6c757d;color:#fff;border-radius:8px;cursor:pointer}`}</style>
+
+      <div style={{ marginTop: "1rem", fontSize: "0.9rem" }}>
+        <Link to="/login">Voltar para login</Link>
+      </div>
     </div>
-    );
-    }
+  );
+}

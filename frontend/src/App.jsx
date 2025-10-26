@@ -1,20 +1,26 @@
-import React from "react";
-import Siderbar from "./components/Siderbar"; // seu componente Siderbar (com s)
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import RegisterPage from "./pages/RegisterPage";
+import LoginPage from "./pages/LoginPage";
 import Dashboard from "./pages/Dashboard";
-
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 export default function App() {
   return (
-    <>
-      <Siderbar />
-      <Header />
-      {/* IMPORTANTE: main deve ter className="content" */}
-      <main className="content bg-white min-vh-100">
-        <Dashboard />
-      </main>
-      <Footer />
-    </>
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+
+      <Route path="/register" element={<RegisterPage />} />
+
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* fallback */}
+      <Route path="*" element={<LoginPage />} />
+    </Routes>
   );
 }
